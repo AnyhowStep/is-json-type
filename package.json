@@ -1,6 +1,6 @@
 {
   "name": "is-json-type",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Checks if a variable came from JSON.parse()",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",

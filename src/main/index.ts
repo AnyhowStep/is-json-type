@@ -42,7 +42,7 @@ export function isJsonPrimitiveType (mixed : any) : mixed is JsonPrimitiveType {
         }
     }
 }
-export function isJsonObjectType (mixed : any) : mixed is JsonObjectType {
+export function isJsonObjectType (mixed : any, seen : any[] = []) : mixed is JsonObjectType {
     if (mixed === null || mixed === undefined) {
         return false;
     }
@@ -55,12 +55,18 @@ export function isJsonObjectType (mixed : any) : mixed is JsonObjectType {
     if (mixed instanceof Date) {
         return false;
     }
+    if (seen.indexOf(mixed) >= 0) {
+        //This array is part of a circular structure
+        return false;
+    }
+    seen.push(mixed);
+
     //https://github.com/douglascrockford/JSON-js/blob/master/json2.js#L326
     //JSON serialization only cares about keys if the object has it as its own property
     for (let k in mixed) {
         if (mixed.hasOwnProperty(k)) {
             const v = mixed[k];
-            if (!isJsonType(v)) {
+            if (!isJsonType(v, seen)) {
                 //This value isn't one of the valid JSON types
                 return false;
             }
@@ -68,21 +74,27 @@ export function isJsonObjectType (mixed : any) : mixed is JsonObjectType {
     }
     return true;
 }
-export function isJsonArrayType (mixed : any) : mixed is JsonArrayType {
+export function isJsonArrayType (mixed : any, seen : any[] = []) : mixed is JsonArrayType {
     if (!(mixed instanceof Array)) {
         return false;
     }
+    if (seen.indexOf(mixed) >= 0) {
+        //This array is part of a circular structure
+        return false;
+    }
+    seen.push(mixed);
+
     for (let v of mixed) {
-        if (!isJsonType(v)) {
+        if (!isJsonType(v, seen)) {
             return false;
         }
     }
     return true;
 }
-export function isJsonType (mixed : any) : mixed is JsonType {
+export function isJsonType (mixed : any, seen : any[] = []) : mixed is JsonType {
     return (
         isJsonPrimitiveType(mixed) ||
-        isJsonObjectType(mixed) ||
-        isJsonArrayType(mixed)
+        isJsonObjectType(mixed, seen) ||
+        isJsonArrayType(mixed, seen)
     );
 }
