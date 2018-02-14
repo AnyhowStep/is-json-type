@@ -1,0 +1,20 @@
+{
+  "name": "is-json-type",
+  "version": "1.0.0",
+  "description": "Checks if a variable came from JSON.parse()",
+  "main": "dist/src/main/index.js",
+  "types": "dist/src/main/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -d"
+  },
+  "author": "anyhowstep",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnyhowStep/is-json-type"
+  },
+  "dependencies": {
+    "typescript": "^2.8.0-dev.20180214"
+  }
+}
